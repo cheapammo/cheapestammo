@@ -28,7 +28,7 @@ jobs:
     
     - name: Run ammunition scraper
       run: |
-        python direct_retailer_scraper.py
+        python enhanced_bulk_scraper.py
     
     - name: Check if data was updated
       id: check_changes
