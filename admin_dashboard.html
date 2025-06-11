@@ -532,12 +532,18 @@
                 
                 const stockClass = item.in_stock ? 'stock-in' : 'stock-out';
                 const stockText = item.in_stock ? '✅ In Stock' : '❌ Out of Stock';
-                const date = new Date(item.scraped_at).toLocaleString('en-US', {
+                
+                // Format date with time as subtext
+                const dateObj = new Date(item.scraped_at);
+                const dateStr = dateObj.toLocaleString('en-US', {
                     month: 'short',
-                    day: 'numeric',
+                    day: 'numeric'
+                });
+                const timeStr = dateObj.toLocaleString('en-US', {
                     hour: '2-digit',
                     minute: '2-digit'
                 });
+                const dateDisplay = `${dateStr}<br><small style="color: #888; font-size: 0.8em;">${timeStr}</small>`;
 
                 row.innerHTML = `
                     <td class="product-name">${item.name}</td>
@@ -547,7 +553,7 @@
                     <td class="price-per-round">$${item.price_per_round.toFixed(4)}</td>
                     <td class="retailer">${item.retailer}</td>
                     <td><span class="${stockClass}">${stockText}</span></td>
-                    <td class="timestamp">${date}</td>
+                    <td class="timestamp">${dateDisplay}</td>
                     <td><a href="${item.url}" target="_blank" class="url-link">View Product</a></td>
                 `;
 
