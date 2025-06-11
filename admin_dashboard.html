@@ -284,6 +284,9 @@
         <div class="header">
             <h1>🎯 CheapAmmo Admin Dashboard</h1>
             <p>Latest ammunition pricing data from retailers</p>
+            <p style="font-size: 0.9em; opacity: 0.8; margin-top: 5px;">
+                📊 Dashboard refreshed: <span id="pageRefreshTime">-</span>
+            </p>
         </div>
 
         <div class="stats" id="stats">
@@ -382,6 +385,15 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('dataTable').style.display = 'table';
                 
+                // Update page refresh time
+                document.getElementById('pageRefreshTime').textContent = new Date().toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
                 console.log(`✅ Loaded ${data.length} products successfully`);
                 
             } catch (error) {
@@ -428,12 +440,23 @@
             const total = originalData.length;
             const inStock = originalData.filter(item => item.in_stock).length;
             const avgPricePerRound = originalData.reduce((sum, item) => sum + item.price_per_round, 0) / total;
-            const lastUpdated = originalData.length > 0 ? new Date(originalData[0].scraped_at).toLocaleString() : 'Never';
+            
+            // Get the most recent timestamp from all products
+            const mostRecentTime = originalData.length > 0 ? 
+                Math.max(...originalData.map(item => new Date(item.scraped_at).getTime())) : 0;
+            
+            const lastUpdated = mostRecentTime > 0 ? 
+                new Date(mostRecentTime).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric', 
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : 'Never';
 
             document.getElementById('totalProducts').textContent = total;
             document.getElementById('avgPrice').textContent = '$' + avgPricePerRound.toFixed(3);
             document.getElementById('inStockCount').textContent = inStock;
-            document.getElementById('lastUpdated').textContent = lastUpdated.split(' ')[0]; // Just date
+            document.getElementById('lastUpdated').textContent = lastUpdated;
         }
 
         function populateFilters() {
