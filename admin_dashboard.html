@@ -441,9 +441,9 @@
             const inStock = originalData.filter(item => item.in_stock).length;
             const avgPricePerRound = originalData.reduce((sum, item) => sum + item.price_per_round, 0) / total;
             
-            // Get the most recent timestamp from all products
+            // Get the most recent timestamp from all products (convert UTC to local time)
             const mostRecentTime = originalData.length > 0 ? 
-                Math.max(...originalData.map(item => new Date(item.scraped_at).getTime())) : 0;
+                Math.max(...originalData.map(item => new Date(item.scraped_at + ' UTC').getTime())) : 0;
             
             const lastUpdated = mostRecentTime > 0 ? 
                 new Date(mostRecentTime).toLocaleString('en-US', {
@@ -533,8 +533,8 @@
                 const stockClass = item.in_stock ? 'stock-in' : 'stock-out';
                 const stockText = item.in_stock ? '✅ In Stock' : '❌ Out of Stock';
                 
-                // Format date with time as subtext
-                const dateObj = new Date(item.scraped_at);
+                // Format date with time as subtext (convert UTC to local time)
+                const dateObj = new Date(item.scraped_at + ' UTC');
                 const dateStr = dateObj.toLocaleString('en-US', {
                     month: 'short',
                     day: 'numeric'
