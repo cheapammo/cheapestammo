@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheapest Ammo Online - Best Ammo Prices Comparison</title>
+    <meta name="description" content="Find the cheapest ammo prices online. Compare ammunition deals from top retailers and save money on your next purchase.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        🎯 Cheapest Ammo Online
+                    </h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="text-gray-700 hover:text-gray-900 font-medium">Home</a>
+                    <a href="#" class="text-gray-700 hover:text-gray-900 font-medium">Deals</a>
+                    <a href="#" class="text-gray-700 hover:text-gray-900 font-medium">Retailers</a>
+                    <a href="#" class="text-gray-700 hover:text-gray-900 font-medium">About</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-4">
+                Find the Best Ammo Deals Online
+            </h2>
+            <p class="text-xl mb-8 opacity-90">
+                Compare prices from top ammunition retailers and save money on your next purchase
+            </p>
+            <div class="max-w-2xl mx-auto">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search for ammunition..."
+                        class="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
+                    />
+                    <button onclick="filterResults()" class="bg-red-500 hover:bg-red-600 px-8 py-3 rounded-lg font-semibold transition-colors">
+                        Search Deals
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="bg-white py-6 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <label class="font-medium text-gray-700">Caliber:</label>
+                    <select id="caliberFilter" onchange="filterResults()" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Calibers</option>
+                        <option value="9mm">9mm</option>
+                        <option value=".223">.223</option>
+                        <option value=".45 ACP">.45 ACP</option>
+                        <option value="5.56x45">5.56x45</option>
+                        <option value=".308">.308</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-4">
+                    <label class="font-medium text-gray-700">Sort by:</label>
+                    <select id="sortBy" onchange="filterResults()" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="price">Price per Round</option>
+                        <option value="name">Name</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                Ammunition Deals (<span id="resultCount">5</span> results)
+            </h3>
+            <p class="text-gray-600">
+                Showing the best prices from verified retailers
+            </p>
+        </div>
+
+        <div id="ammoResults" class="grid gap-4">
+            <!-- Results will be populated by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h5 class="font-bold text-lg mb-4">Cheapest Ammo Online</h5>
+                    <p class="text-gray-300">
+                        Your trusted source for finding the best ammunition deals online.
+                    </p>
+                </div>
+                <div>
+                    <h6 class="font-semibold mb-4">Popular Calibers</h6>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white">9mm Luger</a></li>
+                        <li><a href="#" class="hover:text-white">.223 Remington</a></li>
+                        <li><a href="#" class="hover:text-white">.45 ACP</a></li>
+                        <li><a href="#" class="hover:text-white">5.56x45mm</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="font-semibold mb-4">Resources</h6>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white">Price Alerts</a></li>
+                        <li><a href="#" class="hover:text-white">Retailer Reviews</a></li>
+                        <li><a href="#" class="hover:text-white">Ammo Guide</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="font-semibold mb-4">Legal</h6>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 Cheapest Ammo Online. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mock ammo data
+        const ammoData = [
+            {
+                id: 1,
+                name: '9mm Luger 115gr FMJ',
+                brand: 'Federal',
+                caliber: '9mm',
+                grainWeight: 115,
+                bulletType: 'FMJ',
+                quantity: 50,
+                price: 24.99,
+                pricePerRound: 0.50,
+                retailer: 'AmmoMart',
+                inStock: true,
+                image: 'https://via.placeholder.com/100x60/4f46e5/ffffff?text=9mm'
+            },
+            {
+                id: 2,
+                name: '.223 Remington 55gr FMJ',
+                brand: 'Winchester',
+                caliber: '.223',
+                grainWeight: 55,
+                bulletType: 'FMJ',
+                quantity: 20,
+                price: 18.99,
+                pricePerRound: 0.95,
+                retailer: 'BulkAmmo',
+                inStock: true,
+                image: 'https://via.placeholder.com/100x60/dc2626/ffffff?text=.223'
+            },
+            {
+                id: 3,
+                name: '.45 ACP 230gr FMJ',
+                brand: 'Remington',
+                caliber: '.45 ACP',
+                grainWeight: 230,
+                bulletType: 'FMJ',
+                quantity: 50,
+                price: 42.99,
+                pricePerRound: 0.86,
+                retailer: 'AmmoSeek',
+                inStock: false,
+                image: 'https://via.placeholder.com/100x60/059669/ffffff?text=.45'
+            },
+            {
+                id: 4,
+                name: '5.56x45mm 62gr FMJ',
+                brand: 'PMC',
+                caliber: '5.56x45',
+                grainWeight: 62,
+                bulletType: 'FMJ',
+                quantity: 30,
+                price: 28.99,
+                pricePerRound: 0.97,
+                retailer: 'Sportsman\'s Guide',
+                inStock: true,
+                image: 'https://via.placeholder.com/100x60/7c3aed/ffffff?text=5.56'
+            },
+            {
+                id: 5,
+                name: '.308 Winchester 150gr SP',
+                brand: 'Hornady',
+                caliber: '.308',
+                grainWeight: 150,
+                bulletType: 'SP',
+                quantity: 20,
+                price: 35.99,
+                pricePerRound: 1.80,
+                retailer: 'Cabela\'s',
+                inStock: true,
+                image: 'https://via.placeholder.com/100x60/ea580c/ffffff?text=.308'
+            }
+        ];
+
+        function filterResults() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCaliber = document.getElementById('caliberFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filteredAmmo = ammoData.filter(ammo => {
+                const matchesSearch = searchTerm === '' || 
+                    ammo.name.toLowerCase().includes(searchTerm) || 
+                    ammo.brand.toLowerCase().includes(searchTerm);
+                const matchesCaliber = selectedCaliber === 'all' || ammo.caliber === selectedCaliber;
+                return matchesSearch && matchesCaliber;
+            });
+
+            // Sort results
+            filteredAmmo.sort((a, b) => {
+                if (sortBy === 'price') return a.pricePerRound - b.pricePerRound;
+                if (sortBy === 'name') return a.name.localeCompare(b.name);
+                return 0;
+            });
+
+            displayResults(filteredAmmo);
+        }
+
+        function displayResults(ammo) {
+            const resultsContainer = document.getElementById('ammoResults');
+            const resultCount = document.getElementById('resultCount');
+            
+            resultCount.textContent = ammo.length;
+
+            resultsContainer.innerHTML = ammo.map(item => `
+                <div class="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <img
+                                src="${item.image}"
+                                alt="${item.name}"
+                                class="w-20 h-12 object-cover rounded"
+                            />
+                            <div>
+                                <h4 class="font-semibold text-lg text-gray-900">${item.name}</h4>
+                                <p class="text-gray-600">
+                                    ${item.brand} • ${item.grainWeight}gr ${item.bulletType} • ${item.quantity} rounds
+                                </p>
+                                <p class="text-sm text-gray-500">Sold by ${item.retailer}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-green-600">
+                                $${item.price}
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                $${item.pricePerRound.toFixed(3)}/round
+                            </div>
+                            <div class="mt-2">
+                                ${item.inStock ? 
+                                    '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">In Stock</span>' :
+                                    '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Out of Stock</span>'
+                                }
+                            </div>
+                            <button 
+                                class="mt-3 px-6 py-2 rounded-lg font-medium transition-colors ${item.inStock ? 
+                                    'bg-blue-600 hover:bg-blue-700 text-white' : 
+                                    'bg-gray-300 text-gray-500 cursor-not-allowed'}"
+                                ${!item.inStock ? 'disabled' : ''}
+                                onclick="window.open('#', '_blank')"
+                            >
+                                ${item.inStock ? 'View Deal' : 'Notify Me'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            filterResults();
+            
+            // Add search on enter key
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    filterResults();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

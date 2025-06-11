@@ -1,0 +1,25 @@
+{
+  "scraper_script": "direct_retailer_scraper.py",
+  "interval_minutes": 30,
+  "max_failures": 5,
+  "log_file": "scraper_scheduler.log",
+  "stats_file": "scheduler_stats.json",
+  "timeout_seconds": 300,
+  "description": {
+    "scraper_script": "Python script to run for scraping",
+    "interval_minutes": "How often to run the scraper (in minutes)",
+    "max_failures": "Stop scheduler after this many consecutive failures",
+    "log_file": "File to save logs to",
+    "stats_file": "File to save statistics to",
+    "timeout_seconds": "Maximum time to wait for scraper to complete"
+  },
+  "common_intervals": {
+    "every_15_minutes": 15,
+    "every_30_minutes": 30,
+    "every_hour": 60,
+    "every_2_hours": 120,
+    "every_4_hours": 240,
+    "twice_daily": 720,
+    "daily": 1440
+  }
+} 

@@ -1,0 +1,6 @@
+name,caliber,price,quantity,price_per_round,retailer,in_stock,scraped_at
+9mm Luger 115gr FMJ Federal,9MM,24.99,50,0.4998,Sample Store 1,True,2025-06-09 21:11:06
+.223 Remington 55gr FMJ Winchester,.223,18.99,20,0.9495,Sample Store 2,True,2025-06-09 21:11:06
+.308 Winchester 150gr SP Hornady,.308,35.99,20,1.7995,Sample Store 3,False,2025-06-09 21:11:06
+5.56x45 NATO 62gr FMJ PMC,5.56,28.99,30,0.9663,Sample Store 4,True,2025-06-09 21:11:06
+.45 ACP 230gr FMJ Remington,.45 ACP,42.99,50,0.8598,Sample Store 5,True,2025-06-09 21:11:06

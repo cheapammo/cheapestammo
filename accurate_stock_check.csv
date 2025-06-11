@@ -1,0 +1,4 @@
+name,url,in_stock,confidence,reason,expected_price,current_price,price_match,checked_at
+Winchester 9mm NATO (1000 rounds),https://www.bulkammo.com/1000-rounds-of-9mm-nato-ammo-by-winchester-124gr-fmj,False,high,Found 'out of stock',244.0,0.0,False,2025-06-09 21:58:13
+Ammo Inc 9mm (1000 rounds),https://www.bulkammo.com/1000-rounds-of-9mm-ammo-by-ammo-inc-115gr-fmj,False,high,Found 'out of stock',244.0,244.0,True,2025-06-09 21:58:16
+Turan 5.56 (750 rounds),https://www.bulkammo.com/750-rounds-of-5-56x45-ammo-by-turan-55gr-fmj,False,medium,Buttons present but disabled,314.0,314.0,True,2025-06-09 21:58:18
