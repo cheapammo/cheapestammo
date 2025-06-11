@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheapAmmo Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9ff;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            background: #f8f9ff;
+            border-bottom: 1px solid #e0e6ed;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box, .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .search-box:focus, .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .refresh-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: #5a6fd8;
+        }
+
+        th::after {
+            content: ' ↕';
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e6ed;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        tr:hover {
+            background: #e8f0fe;
+        }
+
+        .product-name {
+            font-weight: 500;
+            color: #333;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+
+        .price-per-round {
+            color: #1976d2;
+            font-weight: 500;
+        }
+
+        .caliber {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .stock-in {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .stock-out {
+            background: #ffebee;
+            color: #c62828;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .retailer {
+            font-weight: 500;
+            color: #455a64;
+        }
+
+        .url-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .url-link:hover {
+            text-decoration: underline;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 6px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .error code {
+            background: #f5f5f5;
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box, .filter-select {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 CheapAmmo Admin Dashboard</h1>
+            <p>Latest ammunition pricing data from retailers</p>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProducts">-</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgPrice">-</div>
+                <div class="stat-label">Avg Price/Round</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="inStockCount">-</div>
+                <div class="stat-label">In Stock</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="lastUpdated">-</div>
+                <div class="stat-label">Last Updated</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search products...">
+            <select class="filter-select" id="caliberFilter">
+                <option value="">All Calibers</option>
+            </select>
+            <select class="filter-select" id="retailerFilter">
+                <option value="">All Retailers</option>
+            </select>
+            <select class="filter-select" id="stockFilter">
+                <option value="">All Stock Status</option>
+                <option value="true">In Stock Only</option>
+                <option value="false">Out of Stock Only</option>
+            </select>
+            <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+        </div>
+
+        <div class="table-container">
+            <div class="loading" id="loading">📊 Loading ammunition data...</div>
+            <table id="dataTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Product Name</th>
+                        <th onclick="sortTable(1)">Caliber</th>
+                        <th onclick="sortTable(2)">Price</th>
+                        <th onclick="sortTable(3)">Quantity</th>
+                        <th onclick="sortTable(4)">Price/Round</th>
+                        <th onclick="sortTable(5)">Retailer</th>
+                        <th onclick="sortTable(6)">Stock</th>
+                        <th onclick="sortTable(7)">Updated</th>
+                        <th>Product Link</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let originalData = [];
+        let filteredData = [];
+        let sortColumn = 4; // Sort by price per round by default
+        let sortDirection = 1; // 1 for ascending, -1 for descending
+
+        async function loadData() {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('loading').innerHTML = '📊 Loading latest ammunition data...';
+                document.getElementById('dataTable').style.display = 'none';
+
+                // Try to load the CSV file
+                const response = await fetch('direct_retailer_prices.csv?' + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: Could not load data file`);
+                }
+
+                const csvText = await response.text();
+                if (!csvText.trim()) {
+                    throw new Error('CSV file is empty');
+                }
+
+                const data = parseCSV(csvText);
+                
+                if (data.length === 0) {
+                    throw new Error('No data found in CSV file');
+                }
+                
+                originalData = data;
+                filteredData = [...data];
+                
+                updateStats();
+                populateFilters();
+                sortTable(sortColumn);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dataTable').style.display = 'table';
+                
+                console.log(`✅ Loaded ${data.length} products successfully`);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').innerHTML = 
+                    `<div class="error">
+                        ❌ Error loading data: ${error.message}
+                        <br><br>
+                        <strong>Troubleshooting:</strong><br>
+                        • Make sure 'direct_retailer_prices.csv' exists in: C:\\Users\\tcons\\Cheapammo\\<br>
+                        • Run the scraper first: <code>python direct_retailer_scraper.py</code><br>
+                        • Refresh this page after running the scraper<br><br>
+                        <button onclick="loadData()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Try Again</button>
+                    </div>`;
+            }
+        }
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',');
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length >= headers.length) {
+                    data.push({
+                        name: values[0],
+                        caliber: values[1],
+                        price: parseFloat(values[2]),
+                        quantity: parseInt(values[3]),
+                        price_per_round: parseFloat(values[4]),
+                        retailer: values[5],
+                        in_stock: values[6] === 'True',
+                        url: values[7],
+                        scraped_at: values[8]
+                    });
+                }
+            }
+
+            return data;
+        }
+
+        function updateStats() {
+            const total = originalData.length;
+            const inStock = originalData.filter(item => item.in_stock).length;
+            const avgPricePerRound = originalData.reduce((sum, item) => sum + item.price_per_round, 0) / total;
+            const lastUpdated = originalData.length > 0 ? new Date(originalData[0].scraped_at).toLocaleString() : 'Never';
+
+            document.getElementById('totalProducts').textContent = total;
+            document.getElementById('avgPrice').textContent = '$' + avgPricePerRound.toFixed(3);
+            document.getElementById('inStockCount').textContent = inStock;
+            document.getElementById('lastUpdated').textContent = lastUpdated.split(' ')[0]; // Just date
+        }
+
+        function populateFilters() {
+            const calibers = [...new Set(originalData.map(item => item.caliber))].sort();
+            const retailers = [...new Set(originalData.map(item => item.retailer))].sort();
+
+            const caliberFilter = document.getElementById('caliberFilter');
+            const retailerFilter = document.getElementById('retailerFilter');
+
+            caliberFilter.innerHTML = '<option value="">All Calibers</option>';
+            calibers.forEach(caliber => {
+                caliberFilter.innerHTML += `<option value="${caliber}">${caliber}</option>`;
+            });
+
+            retailerFilter.innerHTML = '<option value="">All Retailers</option>';
+            retailers.forEach(retailer => {
+                retailerFilter.innerHTML += `<option value="${retailer}">${retailer}</option>`;
+            });
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const caliberFilter = document.getElementById('caliberFilter').value;
+            const retailerFilter = document.getElementById('retailerFilter').value;
+            const stockFilter = document.getElementById('stockFilter').value;
+
+            filteredData = originalData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesCaliber = !caliberFilter || item.caliber === caliberFilter;
+                const matchesRetailer = !retailerFilter || item.retailer === retailerFilter;
+                const matchesStock = !stockFilter || item.in_stock.toString() === stockFilter;
+
+                return matchesSearch && matchesCaliber && matchesRetailer && matchesStock;
+            });
+
+            renderTable();
+        }
+
+        function sortTable(columnIndex) {
+            if (sortColumn === columnIndex) {
+                sortDirection *= -1;
+            } else {
+                sortColumn = columnIndex;
+                sortDirection = 1;
+            }
+
+            const columns = ['name', 'caliber', 'price', 'quantity', 'price_per_round', 'retailer', 'in_stock', 'scraped_at'];
+            const column = columns[columnIndex];
+
+            filteredData.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+
+                if (aVal < bVal) return -1 * sortDirection;
+                if (aVal > bVal) return 1 * sortDirection;
+                return 0;
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                const stockClass = item.in_stock ? 'stock-in' : 'stock-out';
+                const stockText = item.in_stock ? '✅ In Stock' : '❌ Out of Stock';
+                const date = new Date(item.scraped_at).toLocaleString().split(' ')[0];
+
+                row.innerHTML = `
+                    <td class="product-name">${item.name}</td>
+                    <td><span class="caliber">${item.caliber}</span></td>
+                    <td class="price">$${item.price.toFixed(2)}</td>
+                    <td>${item.quantity.toLocaleString()}</td>
+                    <td class="price-per-round">$${item.price_per_round.toFixed(4)}</td>
+                    <td class="retailer">${item.retailer}</td>
+                    <td><span class="${stockClass}">${stockText}</span></td>
+                    <td class="timestamp">${date}</td>
+                    <td><a href="${item.url}" target="_blank" class="url-link">View Product</a></td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+        // Event listeners
+        document.getElementById('searchBox').addEventListener('input', filterData);
+        document.getElementById('caliberFilter').addEventListener('change', filterData);
+        document.getElementById('retailerFilter').addEventListener('change', filterData);
+        document.getElementById('stockFilter').addEventListener('change', filterData);
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html> 
