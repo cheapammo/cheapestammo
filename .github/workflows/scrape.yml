@@ -2,8 +2,8 @@ name: Scrape Ammo Prices Automatically
 
 on:
   schedule:
-    # TEST: Run at 8:08 PM today
-    - cron: '8 20 * * *'
+    # TEST: Run at 8:28 PM today
+    - cron: '28 20 * * *'
   # Allow manual triggering
   workflow_dispatch:
 
