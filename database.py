@@ -88,6 +88,57 @@ class ScrapingLog(Base):
     # Relationship
     retailer = relationship("Retailer")
 
+class EmailDeal(Base):
+    __tablename__ = 'email_deals'
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Email metadata
+    email_id = Column(String(255), unique=True, nullable=False)  # Message-ID from email
+    sender = Column(String(255), nullable=False)
+    subject = Column(String(500), nullable=False)
+    received_date = Column(DateTime, nullable=False)
+    
+    # Deal information
+    retailer_name = Column(String(100))
+    deal_title = Column(String(500))
+    deal_description = Column(Text)
+    
+    # Extracted data
+    calibers = Column(Text)  # JSON array of calibers mentioned
+    prices = Column(Text)  # JSON array of prices found
+    discount_percent = Column(Float)
+    promo_code = Column(String(100))
+    
+    # Deal validity
+    valid_from = Column(DateTime)
+    valid_until = Column(DateTime)
+    is_active = Column(Boolean, default=True)
+    
+    # Content
+    email_html = Column(Text)  # Store full HTML for reference
+    email_text = Column(Text)  # Plain text version
+    
+    # Tracking
+    created_at = Column(DateTime, default=datetime.utcnow)
+    processed_at = Column(DateTime, default=datetime.utcnow)
+    confidence_score = Column(Float)  # How confident we are this is a good deal
+    
+    # Links
+    deal_urls = Column(Text)  # JSON array of URLs found in email
+
+class EmailMonitorLog(Base):
+    __tablename__ = 'email_monitor_logs'
+    
+    id = Column(Integer, primary_key=True)
+    
+    started_at = Column(DateTime, default=datetime.utcnow)
+    completed_at = Column(DateTime)
+    emails_checked = Column(Integer, default=0)
+    deals_found = Column(Integer, default=0)
+    errors = Column(Text)
+    status = Column(String(50))  # success, failed, partial
+
 class DatabaseManager:
     def __init__(self, database_url=DATABASE_URL):
         self.engine = create_engine(database_url)

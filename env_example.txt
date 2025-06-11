@@ -15,4 +15,20 @@ PROXY_ENABLED=false
 # PROXY_LIST=http://proxy1:port,http://proxy2:port
 
 # Logging
-LOG_LEVEL=INFO 
+LOG_LEVEL=INFO
+
+# Email Monitoring Configuration
+# For Gmail, use app-specific password: https://support.google.com/accounts/answer/185833
+EMAIL_IMAP_SERVER=imap.gmail.com
+EMAIL_IMAP_PORT=993
+EMAIL_ADDRESS=your-email@gmail.com
+EMAIL_PASSWORD=your-app-specific-password
+
+# Alternative email providers:
+# Outlook/Hotmail:
+# EMAIL_IMAP_SERVER=outlook.office365.com
+# EMAIL_IMAP_PORT=993
+
+# Yahoo:
+# EMAIL_IMAP_SERVER=imap.mail.yahoo.com
+# EMAIL_IMAP_PORT=993 
