@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV Test</title>
+</head>
+<body>
+    <h1>CSV Data Test</h1>
+    <div id="results">Loading...</div>
+
+    <script>
+        async function testCSV() {
+            try {
+                const response = await fetch('direct_retailer_prices.csv');
+                const csvText = await response.text();
+                
+                const lines = csvText.trim().split('\n');
+                const data = [];
+
+                // Skip header row, process all data rows
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const values = line.split(',');
+                    
+                    if (values.length >= 9) {
+                        data.push({
+                            name: values[0],
+                            caliber: values[1],
+                            price: parseFloat(values[2]) || 0,
+                            quantity: parseInt(values[3]) || 0,
+                            price_per_round: parseFloat(values[4]) || 0,
+                            retailer: values[5] || '',
+                            in_stock: values[6] === 'True',
+                            url: values[7] || '',
+                            scraped_at: values[8] || ''
+                        });
+                    }
+                }
+
+                document.getElementById('results').innerHTML = `
+                    <h2>✅ CSV Parsing Results</h2>
+                    <p><strong>Total Products:</strong> ${data.length}</p>
+                    <p><strong>In Stock:</strong> ${data.filter(item => item.in_stock).length}</p>
+                    <p><strong>Calibers:</strong> ${[...new Set(data.map(item => item.caliber))].join(', ')}</p>
+                    <p><strong>First Product:</strong> ${data[0]?.name}</p>
+                    <p><strong>Last Product:</strong> ${data[data.length-1]?.name}</p>
+                `;
+                
+            } catch (error) {
+                document.getElementById('results').innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        testCSV();
+    </script>
+</body>
+</html> 

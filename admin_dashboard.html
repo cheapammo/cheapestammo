@@ -413,26 +413,36 @@
 
         function parseCSV(text) {
             const lines = text.trim().split('\n');
-            const headers = lines[0].split(',');
             const data = [];
 
+            // Skip header row, process all data rows
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',');
-                if (values.length >= headers.length) {
-                    data.push({
-                        name: values[0],
-                        caliber: values[1],
-                        price: parseFloat(values[2]),
-                        quantity: parseInt(values[3]),
-                        price_per_round: parseFloat(values[4]),
-                        retailer: values[5],
-                        in_stock: values[6] === 'True',
-                        url: values[7],
-                        scraped_at: values[8]
-                    });
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = line.split(',');
+                
+                // Ensure we have all required fields
+                if (values.length >= 9) {
+                    try {
+                        data.push({
+                            name: values[0],
+                            caliber: values[1],
+                            price: parseFloat(values[2]) || 0,
+                            quantity: parseInt(values[3]) || 0,
+                            price_per_round: parseFloat(values[4]) || 0,
+                            retailer: values[5] || '',
+                            in_stock: values[6] === 'True',
+                            url: values[7] || '',
+                            scraped_at: values[8] || ''
+                        });
+                    } catch (error) {
+                        console.warn(`Skipping malformed row ${i}:`, line);
+                    }
                 }
             }
 
+            console.log(`✅ Parsed ${data.length} products from CSV`);
             return data;
         }
 
