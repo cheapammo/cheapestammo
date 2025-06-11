@@ -335,8 +335,9 @@
                         <th onclick="sortTable(3)">Quantity</th>
                         <th onclick="sortTable(4)">Price/Round</th>
                         <th onclick="sortTable(5)">Retailer</th>
-                        <th onclick="sortTable(6)">Stock</th>
-                        <th onclick="sortTable(7)">Updated</th>
+                        <th onclick="sortTable(6)">Source</th>
+                        <th onclick="sortTable(7)">Stock</th>
+                        <th onclick="sortTable(8)">Updated</th>
                         <th>Product Link</th>
                     </tr>
                 </thead>
@@ -359,7 +360,7 @@
                 document.getElementById('dataTable').style.display = 'none';
 
                 // Try to load the CSV file
-                const response = await fetch('direct_retailer_prices.csv?' + new Date().getTime());
+                const response = await fetch('all_prices.csv?' + new Date().getTime());
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: Could not load data file`);
                 }
@@ -403,42 +404,48 @@
                         ❌ Error loading data: ${error.message}
                         <br><br>
                         <strong>Troubleshooting:</strong><br>
-                        • Make sure 'direct_retailer_prices.csv' exists in: C:\\Users\\tcons\\Cheapammo\\<br>
-                        • Run the scraper first: <code>python direct_retailer_scraper.py</code><br>
-                        • Refresh this page after running the scraper<br><br>
+                        • Make sure 'all_prices.csv' is available.<br>
+                        • Run the appropriate scraper if the file is missing or outdated.<br>
+                        • Refresh this page after the file is updated.<br><br>
                         <button onclick="loadData()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Try Again</button>
                     </div>`;
             }
         }
 
         function parseCSV(text) {
-            const lines = text.trim().split('\n');
+            const lines = text.trim().split(/\r?\n/);
             const data = [];
 
-            // Skip header row, process all data rows
+            // Skip header row
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
+
+                // Regex to split CSV, handling commas inside quotes
+                const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
-                const values = line.split(',');
-                
-                // Ensure we have all required fields
-                if (values.length >= 9) {
+                if (values.length >= 10) {
                     try {
+                        // Helper to clean up quoted values
+                        const clean = (val) => val.startsWith('"') && val.endsWith('"') ? val.slice(1, -1) : val;
+
                         data.push({
-                            name: values[0],
-                            caliber: values[1],
+                            name: clean(values[0]),
+                            caliber: clean(values[1]),
                             price: parseFloat(values[2]) || 0,
                             quantity: parseInt(values[3]) || 0,
                             price_per_round: parseFloat(values[4]) || 0,
-                            retailer: values[5] || '',
-                            in_stock: values[6] === 'True',
-                            url: values[7] || '',
-                            scraped_at: values[8] || ''
+                            retailer: clean(values[5]) || '',
+                            source: clean(values[6]) || '',
+                            in_stock: values[7] === 'True',
+                            url: clean(values[8]) || '',
+                            scraped_at: clean(values[9]) || ''
                         });
                     } catch (error) {
                         console.warn(`Skipping malformed row ${i}:`, line);
                     }
+                } else {
+                    console.warn(`Row ${i} has wrong number of fields (${values.length}):`, line);
                 }
             }
 
@@ -513,7 +520,7 @@
                 sortDirection = 1;
             }
 
-            const columns = ['name', 'caliber', 'price', 'quantity', 'price_per_round', 'retailer', 'in_stock', 'scraped_at'];
+            const columns = ['name', 'caliber', 'price', 'quantity', 'price_per_round', 'retailer', 'source', 'in_stock', 'scraped_at'];
             const column = columns[columnIndex];
 
             filteredData.sort((a, b) => {
@@ -562,6 +569,7 @@
                     <td>${item.quantity.toLocaleString()}</td>
                     <td class="price-per-round">$${item.price_per_round.toFixed(4)}</td>
                     <td class="retailer">${item.retailer}</td>
+                    <td>${item.source}</td>
                     <td><span class="${stockClass}">${stockText}</span></td>
                     <td class="timestamp">${dateDisplay}</td>
                     <td><a href="${item.url}" target="_blank" class="url-link">View Product</a></td>
