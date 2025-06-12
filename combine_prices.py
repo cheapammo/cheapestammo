@@ -38,7 +38,7 @@ def discover_input_files() -> List[Path]:
     files: List[Path] = []
     for pat in patterns:
         for path in Path(".").glob(pat):
-            if path.is_file():
+            if path.is_file() and path.name != "all_prices.csv":
                 files.append(path)
     return sorted(files)
 
